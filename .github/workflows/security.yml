@@ -1,0 +1,32 @@
+name: Fintech DevSecOps Security Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  bandit_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Bandit
+        run: pip install bandit
+      - name: Run Bandit security scan
+        run: bandit -r .
+        
+  trivy_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        run: docker build -t fintech-app-image .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.16.0
+        with:
+          image-ref: fintech-app-image

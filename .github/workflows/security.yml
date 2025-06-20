@@ -16,17 +16,21 @@ jobs:
         run: pip install bandit
       - name: Run Bandit security scan
         run: bandit -r .
-        
+
   trivy_scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+
       - name: Build Docker image
         run: docker build -t fintech-app-image .
+
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@main
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: fintech-app-image
+          scan-type: 'image'
+          image-ref: 'fintech-app-image'
+          format: 'table'
+          exit-code: 0
+          severity: 'HIGH,CRITICAL'

